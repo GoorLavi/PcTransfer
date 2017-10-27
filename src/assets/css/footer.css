@@ -1,0 +1,19 @@
+
+#footer{
+    bottom: 0%;
+    position: fixed;
+    width: 100%;
+    background-color: rgb(234, 234, 234);
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    height:56px;
+}
+
+#footer h1{
+ font-size: 4vh;
+}
+
+#folder_back_btn {
+    float: left;
+}
