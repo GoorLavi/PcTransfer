@@ -9,9 +9,7 @@ export default (state = initializedState, action) => {
     switch (action.type) {
         case 'ADD_FILE': {
 
-            const {path, name, type} = action.file;
-
-            const newState = addFileToState(state, path, name, type);
+            const newState = addFileToState(state, action.fileData);
 
             return Object.assign({}, newState);
 

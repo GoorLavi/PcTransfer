@@ -9,49 +9,42 @@ import {
     getLastPathFolder,
     getFolderTreeFromState,
     isFolderFullyChosen,
-    setFolderTreeInState
+    setFolderTreeInState,
+    stateSizeInMByte
 } from '../utiles/filesUtiles';
 import Consts from '../consts';
 
 /**
  * Simply adding file to state tree
  * @param state
- * @param path
- * @param name
- * @param type
- * @returns new state Object
+ * @param fileData
+ * @returns {{}}
  */
-export const addFileToState = (state, path, name, type) => {
+export const addFileToState = (state, fileData) => {
 
-    const branchPath = convertPathSlashesToDots(path);
+    const { folderPath } = fileData;
+
+    const branchPath = convertPathSlashesToDots(folderPath);
 
     let newState = {};
 
-    if (type === Consts.types.dir) {
+    const fileBranchPath = fullFilePathToObjectTreeFilesPath(branchPath);
 
-        const dirBranchPath = fullDirPathToObjectTreeDirsPath(path, name);
+    // If the folder don't have selected files already
+    // create the files array with the file in it
+    if (!_.get(state, fileBranchPath))
+        newState = _.set(state, fileBranchPath, [fileData]);
 
-        newState = _.set(state, dirBranchPath, {});
+    else { // Push the file name into the files array
 
+        let filesArray = _.get(state, fileBranchPath);
+
+        filesArray.push(fileData);
+
+        newState = _.set(state, fileBranchPath, filesArray);
     }
-    else {
 
-        const fileBranchPath = fullFilePathToObjectTreeFilesPath(branchPath);
-
-        // If the folder dont have selected files already
-        // create the files array with the file in it
-        if (!_.get(state, fileBranchPath))
-            newState = _.set(state, fileBranchPath, [name]);
-
-        else { // Push the file name into the files array
-
-            let filesArray = _.get(state, fileBranchPath);
-
-            filesArray.push(name);
-
-            newState = _.set(state, fileBranchPath, filesArray);
-        }
-    }
+    // console.log(stateSizeInMByte(newState));
 
     return newState
 
@@ -124,6 +117,8 @@ export const removeFile = (state, path, name) => {
             const fatherBranch = removeLastBranch(branchPath);
             return setFolderTreeInState(newState, fatherBranch);
         }
+
+        return newState;
     }
     else
         return _.set(state, branchPath, newFileArray);

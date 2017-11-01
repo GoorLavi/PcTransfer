@@ -6,8 +6,7 @@ import Consts from '../consts';
 
 const mapStateToProps = (state, ownProps) => {
 
-    let folderContent = getFolderContent(state.contextReducer.folder);
-
+    let folderContent = getFolderContent(state.contextReducer.folder)
     return {
         folderContent
     };
@@ -18,3 +17,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExplorerContainer)
+

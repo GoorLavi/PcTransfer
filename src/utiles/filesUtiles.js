@@ -2,6 +2,7 @@ import fs from 'fs';
 import Consts from '../consts';
 import _ from 'lodash';
 import fileType from 'file-type';
+import flatten from 'flat';
 
 export const getFolderContent = folderPath => {
 
@@ -15,17 +16,27 @@ export const getFolderContent = folderPath => {
 
         let element = {name: elementName};
 
-        let elementFullPath = combinePath(folderFullPath, elementName);
+        const elementFullPath = combinePath(folderFullPath, elementName);
 
-        element.type = determinateElementType(elementFullPath);
+        const elementProps = getElementProps(elementFullPath);
+
+        element.type = determinateElementType(elementFullPath, elementProps);
 
         element.folderPath = folderPath;
 
-        foldersElements.push(element);
+        foldersElements.push(Object.assign({}, element, elementProps));
 
     });
 
     return foldersElements;
+};
+
+export const getElementProps = (path) => {
+
+    let element = fs.statSync(path);
+
+    // Size on MByte
+    return {size: (element.size / 1000000), isDir: element.isDirectory()};
 };
 
 export const getFullFolderContent = folderPath => {
@@ -42,16 +53,17 @@ export const getFullFolderContent = folderPath => {
 
         let elementFullPath = combinePath(folderFullPath, elementName);
 
-        element.type = determinateElementType(elementFullPath);
+        const elementProps = getElementProps(elementFullPath);
+        element.type = determinateElementType(elementFullPath, elementProps);
 
-        if (element.type === Consts.types.dir) {
+        if (elementProps.isDir) {
 
             const dirPath = combinePath(folderPath, elementName);
             foldersElements[element.name] = getFullFolderContent(dirPath);
         }
         else {
 
-            foldersElements.files.push(element.name);
+            foldersElements.files.push(element);
         }
     });
 
@@ -70,22 +82,22 @@ export const getLastPathFolder = path => {
     return _.last(pathArray);
 };
 
-export const determinateElementType = elementPath => {
+export const determinateElementType = (elementPath, elementProps) => {
 
-    try {
+    if (elementProps.isDir)
+        return Consts.types.dir;
 
-        if (fs.statSync(elementPath).isDirectory())
-            return Consts.types.dir;
+    // Get the file in order to fileType the element
+    const element = getFile(elementPath);
+    const elementType = fileType(element);
 
-        const element = getFile(elementPath);
-        const elementType = fileType(element);
+    if (!elementType) {
 
-        if (elementType.mime.includes('image')) {
-            return Consts.types.img;
-        }
-    }
-    catch (e) {
         return Consts.types.file;
+    }
+    else { // If the file type is known
+        if (elementType.mime.includes('image'))
+            return Consts.types.img;
     }
 };
 
@@ -146,7 +158,12 @@ export const breakPath = path => {
 
 export const convertPathSlashesToDots = path => {
 
-    return path.replace(/\//g, '.')
+    return path.length ? path.replace(/\//g, '.') : "";
+};
+
+export const convertSlashesToBackSlashes = path => {
+
+    return path.replace(/\//g, '/\\/');
 };
 
 /**
@@ -162,7 +179,7 @@ export const findFileExistenceOnState = (state, filePath, fileName) => {
     const fileBranchPath = fullFilePathToObjectTreeFilesPath(branchPath);
     const filesArray = _.get(state, fileBranchPath);
 
-    return !!_.find(filesArray, file => file === fileName);
+    return !!_.find(filesArray, file => file.name === fileName);
 };
 
 /**
@@ -182,10 +199,7 @@ export const isFolderFullyChosen = (stateTreeObject, folderPath, name) => {
 
     const folderTreeObject = findFolderOnState(stateTreeObject, folderPath, name);
 
-    if (!folderTreeObject || !folderTreeObject.fullyChosen)
-        return false;
-
-    return true;
+    return folderTreeObject && folderTreeObject.fullyChosen
 };
 
 export const fullFilePathToObjectTreeFilesPath = path => {
@@ -197,7 +211,6 @@ export const fullDirPathToObjectTreeDirsPath = (path, dirName) => {
 
     return convertPathSlashesToDots(path) + '.' + dirName;
 };
-
 
 export const getFolderTreeFromState = (stateTree, path) => {
 
@@ -212,7 +225,20 @@ export const getFolderTreeFromState = (stateTree, path) => {
 export const setFolderTreeInState = (stateTree, path, newFolderTree) => {
 
     if (path.length)
-       return _.set(stateTree, path, newFolderTree);
+        return _.set(stateTree, path, newFolderTree);
 
     return _.set(stateTree, newFolderTree);
+};
+
+export const stateSizeInMByte = (stateTree) => {
+
+    const flattedStateTree = flatten(stateTree);
+
+    let SizeInMB = 0;
+
+    _.forEach(flattedStateTree, e => {
+        SizeInMB += e;
+    });
+
+    return SizeInMB;
 };

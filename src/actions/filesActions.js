@@ -1,17 +1,22 @@
+import { parametersValidations } from '../utiles/validationsUtils';
+
 /**
  *
- * @param filePath
- * @param fileName
- * @returns {{type: string, file: {path: *, name: *}}}
+ * @param folderPath
+ * @param isDir
+ * @param name
+ * @param size
+ * @param type
+ * @returns {{type: string, fileData: *}}
  */
-export const addFile = (filePath, fileName) => {
+export const addFile = (fileData) => {
+
+    // Validation check
+    parametersValidations(fileData, 'name', 'size', 'type');
 
     return {
         type: 'ADD_FILE',
-        file: {
-            path: filePath,
-            name: fileName
-        }
+        fileData: fileData
     };
 };
 
@@ -34,8 +39,9 @@ export const removeFile = (filePath, fileName) => {
 
 /**
  *
- * @param filesPath
- * @param filesNames
+ * @param folderPath
+ * @param fullFolderTree
+ * @returns {{type: string, folderPath: *, fullFolderTree: *}}
  */
 export const addFolderFiles = (folderPath, fullFolderTree) => {
 

@@ -11,7 +11,7 @@ export default class explorerContainer extends Component {
         const { folderContent } = this.props;
 
         let explorerElements = folderContent.map((element, index) =>
-            <ExplorerElement key={index} type={element.type} name={element.name} folderPath={element.folderPath} />
+            <ExplorerElement key={index} element={element} />
         );
 
         // Split the array to 4 elements per row

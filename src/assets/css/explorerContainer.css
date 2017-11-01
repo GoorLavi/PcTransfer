@@ -59,8 +59,20 @@
 
 }
 
-.explorer-col{
+.explorer-col {
     width: 21%;
     margin-right: 2%;
     margin-left: 2%;
+}
+
+.element-checked-icon {
+    float: right;
+}
+
+.element-name {
+    display: inline-block;
+}
+
+.image-thumbnail-element img{
+    background-color: white;
 }
