@@ -54,6 +54,7 @@ export const getFullFolderContent = folderPath => {
         let elementFullPath = combinePath(folderFullPath, elementName);
 
         const elementProps = getElementProps(elementFullPath);
+
         element.type = determinateElementType(elementFullPath, elementProps);
 
         if (elementProps.isDir) {
@@ -62,8 +63,8 @@ export const getFullFolderContent = folderPath => {
             foldersElements[element.name] = getFullFolderContent(dirPath);
         }
         else {
-
-            foldersElements.files.push(element);
+            const mergedElement = Object.assign({}, element, elementProps);
+            foldersElements.files.push(mergedElement);
         }
     });
 
@@ -204,7 +205,7 @@ export const isFolderFullyChosen = (stateTreeObject, folderPath, name) => {
 
 export const fullFilePathToObjectTreeFilesPath = path => {
 
-    return path.length ? path + '.files' : 'files';
+    return path.length ? path + `.${Consts.props.files}` : Consts.props.files;
 };
 
 export const fullDirPathToObjectTreeDirsPath = (path, dirName) => {
@@ -230,15 +231,26 @@ export const setFolderTreeInState = (stateTree, path, newFolderTree) => {
     return _.set(stateTree, newFolderTree);
 };
 
+/**
+ *  Find selected files Weight
+ * @param stateTree
+ * @returns {number}
+ */
 export const stateSizeInMByte = (stateTree) => {
 
     const flattedStateTree = flatten(stateTree);
 
     let SizeInMB = 0;
 
-    _.forEach(flattedStateTree, e => {
-        SizeInMB += e;
+    _.forEach(flattedStateTree, (prop, propsName) => {
+        if (_.endsWith(propsName, Consts.props.size))
+            SizeInMB += prop;
     });
 
     return SizeInMB;
+};
+
+
+export const getDrivesList = () => {
+
 };

@@ -3,7 +3,8 @@ import {combinePath, removeLastFolder} from '../utiles/filesUtiles';
 
 let initializedState = {
     mode: '',
-    folder: ''
+    folder: '',
+    section: Consts.section.fileSection
 };
 
 export default (state = initializedState, action) => {
@@ -12,6 +13,10 @@ export default (state = initializedState, action) => {
         case 'CHANGE_MODE': {
 
             return Object.assign({}, state, {mode: action.mode});
+        }
+        case 'CHANGE_SECTION': {
+
+            return Object.assign({}, state, {section: action.section});
         }
         case 'ENTER_SUB_FOLDER': {
 

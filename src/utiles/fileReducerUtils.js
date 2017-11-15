@@ -44,7 +44,7 @@ export const addFileToState = (state, fileData) => {
         newState = _.set(state, fileBranchPath, filesArray);
     }
 
-    // console.log(stateSizeInMByte(newState));
+    console.log(stateSizeInMByte(newState));
 
     return newState
 
@@ -97,7 +97,7 @@ export const removeFile = (state, path, name) => {
 
     const filesArray = _.get(state, branchPath);
 
-    const newFileArray = _.reject(filesArray, fileName => fileName === name);
+    const newFileArray = _.reject(filesArray, file => file.name === name);
 
 
     if (isFolderFullyChosen(state, path, ''))

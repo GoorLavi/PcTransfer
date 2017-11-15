@@ -61,6 +61,8 @@ function createWindow() {
         if ( dev ) {
             mainWindow.webContents.openDevTools();
         }
+
+        // app.commandLine.appendSwitch('remote-debugging-port', '8181');
     });
 
     // Emitted when the window is closed.

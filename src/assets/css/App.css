@@ -4,12 +4,11 @@
   height:100%;
   width: 100%;
   direction: rtl;
+  padding: 80px 20px 45px
 }
 
 
 body{
-
-  /*background: linear-gradient(to top, #cec0b0, #b5aea6, rgba(92, 122, 146, 0.85)) fixed;*/
   background-size: 100%;
 }
 

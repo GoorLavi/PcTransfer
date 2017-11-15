@@ -76,10 +76,12 @@ const mapDispatchToProps = (dispatch) => {
 
 const mergeProps = (propsFromState, propsFromDispatch, ownProps) => {
 
+    const { element } = propsFromState;
+
     return {
-        onClick: () => propsFromDispatch.onClick(ownProps.element),
-        onDoubleClick: () => propsFromDispatch.onDoubleClick(ownProps.element),
-        element: propsFromState.element
+        onClick: () => propsFromDispatch.onClick(element),
+        onDoubleClick: () => propsFromDispatch.onDoubleClick(element),
+        element: element
     }
 };
 

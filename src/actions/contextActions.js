@@ -35,3 +35,11 @@ export const exitFolder = () => {
         type: 'EXIT_FOLDER'
     };
 };
+
+export const changeSection = (section) => {
+
+    return {
+        type: 'CHANGE_SECTION',
+        section
+    };
+};

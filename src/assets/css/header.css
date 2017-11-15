@@ -2,6 +2,7 @@
 #header{
     position: fixed;
     top: 0;
+    right: 0;
     z-index: 1;
     background-color: #5f5f5f;
     height: 56px;
