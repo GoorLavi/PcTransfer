@@ -9,6 +9,8 @@ export default class UsbDevice {
     return this.mountpoints[0].path;
   }
 
-  isSelected(context) {}
+  isSelected(selectedUsbDevicePath) {
+    return selectedUsbDevicePath === this.getPath();
+  }
 
 }

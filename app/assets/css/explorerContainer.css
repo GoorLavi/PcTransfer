@@ -76,3 +76,7 @@
 .image-thumbnail-element img{
     /* background-color: white; */
 }
+
+.selected-usb-device-thumbnail{
+  background-color: #6ea3d2;
+}

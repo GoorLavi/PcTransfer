@@ -7,18 +7,19 @@ export default class deviceElement extends Component {
 
   constructor(props) {
     super(props);
-
-    this.onClick = this.onClick.bind(this);
   }
-
-  onClick() {};
 
   render() {
 
-    const usbDevice = this.props.usbDevice;
+    const {usbDevice, onClick, isChosen} = this.props;
+
+    const className = 'image-thumbnail-element' + (
+      isChosen
+      ? ' selected-usb-device-thumbnail'
+      : '')
 
     return (<Col className="explorer-col" xs={3} onClick={() => onClick()}>
-      <Thumbnail className="image-thumbnail-element" src={UsbDevice} alt="242x200">
+      <Thumbnail className={className} src={UsbDevice} alt="242x200">
         {usbDevice.getPath()}
       </Thumbnail>
     </Col>);

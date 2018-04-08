@@ -50,3 +50,21 @@ export const signUsbDevices = () => {
     });
   };
 }
+
+export const manageUsbDeviceClick = (clickedDevicePath) => {
+
+  return(dispatch, getState) => {
+
+    const state = getState();
+    const {selectedUsbDevicePath} = state.contextReducer;
+
+    const type = 'SELECT_USB_DEVICE';
+
+    // Case device already selected
+    // remove the device seletion
+    if (selectedUsbDevicePath === clickedDevicePath) 
+      dispatch({type});
+    else 
+      dispatch({type, clickedDevicePath});
+    }
+  };

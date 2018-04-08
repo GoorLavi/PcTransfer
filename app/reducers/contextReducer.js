@@ -5,7 +5,8 @@ let initializedState = {
   mode: '',
   folder: '',
   section: Consts.section.fileSection,
-  usbDevices: []
+  usbDevices: [],
+  selectedUsbDevicePath: ''
 };
 
 export default(state = initializedState, action) => {
@@ -43,6 +44,10 @@ export default(state = initializedState, action) => {
     case 'SIGN_USB_DEVICES':
       {
         return Object.assign({}, state, {usbDevices: action.devices});
+      }
+    case 'SELECT_USB_DEVICE':
+      {
+        return Object.assign({}, state, {selectedUsbDevicePath: action.clickedDevicePath});
       }
     default:
       return state;
