@@ -16,7 +16,7 @@ export default class deviceElement extends Component {
     const className = 'image-thumbnail-element' + (
       isChosen
       ? ' selected-usb-device-thumbnail'
-      : '')
+      : '');
 
     return (<Col className="explorer-col" xs={3} onClick={() => onClick()}>
       <Thumbnail className={className} src={UsbDevice} alt="242x200">

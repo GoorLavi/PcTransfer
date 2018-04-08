@@ -1,15 +1,14 @@
-import thunk from 'redux-thunk';
-import Consts from '../consts';
-import {getDrivesList} from '../utiles/filesUtils';
+import thunk from "redux-thunk";
+import Consts from "../consts";
+import Modal from "../models/modal";
+import {getDrivesList} from "../utiles/filesUtils";
 
 export const setCloneMode = () => {
-
-  return {type: 'CHANGE_MODE', mode: 'cloneMode'};
+	return {type: "CHANGE_MODE", mode: "cloneMode"};
 };
 
 export const setInsertMode = () => {
-
-  return {type: 'CHANGE_MODE', mode: 'insertMode'};
+	return {type: "CHANGE_MODE", mode: "insertMode"};
 };
 
 /**
@@ -17,54 +16,68 @@ export const setInsertMode = () => {
  * @param newFolderName
  * @returns {{type: string, subFolderName: *}}
  */
-export const enterSubFolder = (newFolderName) => {
-
-  return {type: 'ENTER_SUB_FOLDER', subFolderName: newFolderName};
+export const enterSubFolder = newFolderName => {
+	return {type: "ENTER_SUB_FOLDER", subFolderName: newFolderName};
 };
 
 export const exitFolder = () => {
-
-  return {type: 'EXIT_FOLDER'};
+	return {type: "EXIT_FOLDER"};
 };
 
-export const changeSection = (section) => {
-  return(dispatch, getState) => {
+export const changeSection = section => {
+	return (dispatch, getState) => {
+		// In case switching to "select device zone"
+		if (section === Consts.section.targetFolderSection)
+			dispatch(signUsbDevices()); // Find and store connected devices
 
-    // In case switching to "select device zone"
-    if (section === Consts.section.targetFolderSection) 
-      dispatch(signUsbDevices()); // Find and store connected devices
-    
-    dispatch({type: 'CHANGE_SECTION', section});
-  };
-}
+		dispatch({type: "CHANGE_SECTION", section});
+	};
+};
 
 // Signing connected devices to store
 export const signUsbDevices = () => {
+	return (dispatch, getState) => {
+		getDrivesList().then(
+			usbDevices => {
+				dispatch({type: "SIGN_USB_DEVICES", devices: usbDevices});
+			},
+			() => {
+				const typeId = Consts.modalTypes.error.id;
+				const modal = new Modal(
+					typeId,
+					"Sorry",
+					"Could not find any devices error has been accoured..."
+				);
 
-  return(dispatch, getState) => {
+				dispatch(openModal(modal));
+			}
+		);
+	};
+};
 
-    getDrivesList().then((usbDevices) => {
-      dispatch({type: 'SIGN_USB_DEVICES', devices: usbDevices});
-    }, () => {
-      alert("Sorry could not find any devices error has been accoured");
-    });
-  };
-}
+export const manageUsbDeviceClick = clickedDevicePath => {
+	return (dispatch, getState) => {
+		const state = getState();
+		const {selectedUsbDevicePath} = state.contextReducer;
 
-export const manageUsbDeviceClick = (clickedDevicePath) => {
+		const type = "SELECT_USB_DEVICE";
 
-  return(dispatch, getState) => {
+		// Case device already selected
+		// remove the device seletion
+		if (selectedUsbDevicePath === clickedDevicePath) dispatch({type});
+		else dispatch({type, clickedDevicePath});
+	};
+};
 
-    const state = getState();
-    const {selectedUsbDevicePath} = state.contextReducer;
+export const closeModal = () => {
+	return {
+		type: "CLOSE_MODAL"
+	};
+};
 
-    const type = 'SELECT_USB_DEVICE';
-
-    // Case device already selected
-    // remove the device seletion
-    if (selectedUsbDevicePath === clickedDevicePath) 
-      dispatch({type});
-    else 
-      dispatch({type, clickedDevicePath});
-    }
-  };
+export const openModal = modal => {
+	return {
+		type: "OPEN_MODAL",
+		modal
+	};
+};

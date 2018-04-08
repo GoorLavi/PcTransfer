@@ -1,16 +1,16 @@
 import _ from 'lodash';
 import {
-    convertPathSlashesToDots,
-    fullFilePathToObjectTreeFilesPath,
-    fullDirPathToObjectTreeDirsPath,
-    combineTreePath,
-    removeLastBranch,
-    removeLastFolder,
-    getLastPathFolder,
-    getFolderTreeFromState,
-    isFolderFullyChosen,
-    setFolderTreeInState,
-    stateSizeInMByte
+  convertPathSlashesToDots,
+  fullFilePathToObjectTreeFilesPath,
+  fullDirPathToObjectTreeDirsPath,
+  combineTreePath,
+  removeLastBranch,
+  removeLastFolder,
+  getLastPathFolder,
+  getFolderTreeFromState,
+  isFolderFullyChosen,
+  setFolderTreeInState,
+  stateSizeInMByte
 } from '../utiles/filesUtils';
 import Consts from '../consts';
 
@@ -22,66 +22,59 @@ import Consts from '../consts';
  */
 export const addFileToState = (state, fileData) => {
 
-    const { folderPath } = fileData;
+  const {folderPath} = fileData;
 
-    const branchPath = convertPathSlashesToDots(folderPath);
+  const branchPath = convertPathSlashesToDots(folderPath);
 
-    let newState = {};
+  let newState = {};
 
-    const fileBranchPath = fullFilePathToObjectTreeFilesPath(branchPath);
+  const fileBranchPath = fullFilePathToObjectTreeFilesPath(branchPath);
 
-    // If the folder don't have selected files already
-    // create the files array with the file in it
-    if (!_.get(state, fileBranchPath))
-        newState = _.set(state, fileBranchPath, [fileData]);
+  // If the folder don't have selected files already
+  // create the files array with the file in it
+  if (!_.get(state, fileBranchPath)) 
+    newState = _.set(state, fileBranchPath, [fileData]);
+  
+else { // Push the file name into the files array
 
-    else { // Push the file name into the files array
+    let filesArray = _.get(state, fileBranchPath);
 
-        let filesArray = _.get(state, fileBranchPath);
+    filesArray.push(fileData);
 
-        filesArray.push(fileData);
+    newState = _.set(state, fileBranchPath, filesArray);
+  }
 
-        newState = _.set(state, fileBranchPath, filesArray);
-    }
-
-    console.log(stateSizeInMByte(newState));
-
-    return newState
-
+  return newState
 };
-
 
 const unChooseFolder = (state, branchPath) => {
 
-    let newState = state;
+  let newState = state;
 
+  // Runs all over the folder tree from bottom to top
+  // and removing the fully chosen sign
+  for (let i = 0; i < branchPath.split('.').length; i++) {
 
-    // Runs all over the folder tree from bottom to top
-    // and removing the fully chosen sign
-    for (let i = 0; i < branchPath.split('.').length; i++) {
+    if (i) // If its not the first loop run
+      branchPath = removeLastBranch(branchPath);
+    
+    let parentFolderPath = removeLastBranch(branchPath);
+    const folderName = getLastPathFolder(branchPath);
 
-        if (i) // If its not the first loop run
-            branchPath = removeLastBranch(branchPath);
+    const isFolderChosen = isFolderFullyChosen(newState, parentFolderPath, folderName);
 
-        let parentFolderPath = removeLastBranch(branchPath);
-        const folderName = getLastPathFolder(branchPath);
+    let dirTreeObject = getFolderTreeFromState(state, branchPath);
 
+    if (isFolderChosen) {
 
-        const isFolderChosen = isFolderFullyChosen(newState, parentFolderPath, folderName);
-
-        let dirTreeObject = getFolderTreeFromState(state, branchPath);
-
-        if (isFolderChosen) {
-
-            dirTreeObject = _.omit(dirTreeObject, 'fullyChosen');
-            newState = setFolderTreeInState(newState, branchPath, dirTreeObject)
-        }
-        else {
-            break;
-        }
+      dirTreeObject = _.omit(dirTreeObject, 'fullyChosen');
+      newState = setFolderTreeInState(newState, branchPath, dirTreeObject)
+    } else {
+      break;
     }
+  }
 
-    return newState;
+  return newState;
 };
 
 /**
@@ -93,37 +86,35 @@ const unChooseFolder = (state, branchPath) => {
  */
 export const removeFile = (state, path, name) => {
 
-    const branchPath = fullFilePathToObjectTreeFilesPath(path);
+  const branchPath = fullFilePathToObjectTreeFilesPath(path);
 
-    const filesArray = _.get(state, branchPath);
+  const filesArray = _.get(state, branchPath);
 
-    const newFileArray = _.reject(filesArray, file => file.name === name);
+  const newFileArray = _.reject(filesArray, file => file.name === name);
 
+  if (isFolderFullyChosen(state, path, '')) 
+    unChooseFolder(state, path);
+  
+  // If the files array is empty remove the
+  // array from the state tree
+  if (!newFileArray.length) {
+    let newState = _.omit(state, branchPath);
 
-    if (isFolderFullyChosen(state, path, ''))
-        unChooseFolder(state, path);
+    // const dirObject = _.get(newState, path);
+    const dirObject = getFolderTreeFromState(newState, path);
 
-    // If the files array is empty remove the
-    // array from the state tree
-    if (!newFileArray.length) {
-        let newState = _.omit(state, branchPath);
+    // If the dir obj is empty remove the folder from the tree
+    if (Object.keys(dirObject).length === 0 && dirObject.constructor === Object) {
 
-        // const dirObject = _.get(newState, path);
-        const dirObject = getFolderTreeFromState(newState, path);
-
-        // If the dir obj is empty remove the folder from the tree
-        if (Object.keys(dirObject).length === 0 && dirObject.constructor === Object) {
-
-            const fatherBranch = removeLastBranch(branchPath);
-            return setFolderTreeInState(newState, fatherBranch);
-        }
-
-        return newState;
+      const fatherBranch = removeLastBranch(branchPath);
+      return setFolderTreeInState(newState, fatherBranch);
     }
-    else
-        return _.set(state, branchPath, newFileArray);
-};
 
+    return newState;
+  } else 
+    return _.set(state, branchPath, newFileArray);
+  }
+;
 
 /**
  *  Insert all the folders content
@@ -135,8 +126,8 @@ export const removeFile = (state, path, name) => {
  */
 export const addFolderContentToState = (state, folderPath, fullFolderTree) => {
 
-    fullFolderTree = setFoldersTreeToFullyChosen(state, folderPath, fullFolderTree);
-    return _.set(state, folderPath, fullFolderTree);
+  fullFolderTree = setFoldersTreeToFullyChosen(state, folderPath, fullFolderTree);
+  return _.set(state, folderPath, fullFolderTree);
 };
 
 /**
@@ -148,13 +139,13 @@ export const addFolderContentToState = (state, folderPath, fullFolderTree) => {
  */
 export const removeFolderContentFromState = (state, parentFolderPath, folderName) => {
 
-    let FolderPath = combineTreePath(parentFolderPath, folderName);
+  let FolderPath = combineTreePath(parentFolderPath, folderName);
 
-    let newState = unChooseFolder(state, FolderPath);
+  let newState = unChooseFolder(state, FolderPath);
 
-    newState = _.omit(newState, FolderPath);
+  newState = _.omit(newState, FolderPath);
 
-    return newState;
+  return newState;
 };
 
 /**
@@ -167,11 +158,11 @@ export const removeFolderContentFromState = (state, parentFolderPath, folderName
  */
 const setFoldersTreeToFullyChosen = (state, folderPath, fullFolderTree) => {
 
-    const subDirsTree = setAllSubFoldersToFullyChosen(fullFolderTree);
+  const subDirsTree = setAllSubFoldersToFullyChosen(fullFolderTree);
 
-    subDirsTree.fullyChosen = true;
+  subDirsTree.fullyChosen = true;
 
-    return subDirsTree;
+  return subDirsTree;
 };
 
 /**
@@ -182,19 +173,17 @@ const setFoldersTreeToFullyChosen = (state, folderPath, fullFolderTree) => {
  */
 const setAllSubFoldersToFullyChosen = (fullFolderTree) => {
 
-    return _.mapValues(fullFolderTree, element => {
-        if (typeof element === 'object' && !Array.isArray(element)) {
-            element.fullyChosen = true;
+  return _.mapValues(fullFolderTree, element => {
+    if (typeof element === 'object' && !Array.isArray(element)) {
+      element.fullyChosen = true;
 
-            setAllSubFoldersToFullyChosen(element);
+      setAllSubFoldersToFullyChosen(element);
 
-        }
+    }
 
-        return element;
+    return element;
 
-    });
+  });
 
-    // fullFolderTree.map();
+  // fullFolderTree.map();
 };
-
-

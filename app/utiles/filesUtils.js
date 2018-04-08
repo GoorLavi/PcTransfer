@@ -10,6 +10,14 @@ import {remote} from 'electron';
 
 // import {requireTaskPool} from 'electron-remote';
 
+// const files = requireTaskPool(require.resolve('../remote-process/files-manager'));
+
+// const answer = files.calculate().then(() => {
+//   console.log('done');
+// });
+
+// console.log('title', answer);
+
 export const getFolderContent = folderPath => {
 
   const folderFullPath = combinePath(Consts.sharedFolderPath, folderPath);
