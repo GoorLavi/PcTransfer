@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 import ExplorerContainer from '../components/explorerContainer';
-import { getFolderContent, getFile } from '../utiles/filesUtiles';
+import { getFolderContent, getFile } from '../utiles/filesUtils';
 import Consts from '../consts';
 
 

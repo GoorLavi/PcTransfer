@@ -3,6 +3,7 @@ import Consts from '../consts';
 import _ from 'lodash';
 import fileType from 'file-type';
 import flatten from 'flat';
+import UsbDevice from '../models/usbDevice';
 
 import {ipcRenderer} from 'electron';
 import {remote} from 'electron';
@@ -270,11 +271,41 @@ export const stateSizeInMByte = (stateTree) => {
 
 let drivesList = [];
 
-ipcRenderer.on('connected-devices', function(event, arg) {
-  console.log(arg);
-  drivesList.push(arg);
+// Retrieving drivesList from main process
+ipcRenderer.on('connected-devices', (event, devices) => {
+  console.log('found devices: ', devices);
+
+  // Converting device object to model
+  drivesList = _.map(devices, device => new UsbDevice(device));
 });
 
+// Requesting drivesList from main process
 export const getDrivesList = () => {
+
+  // Initial the array
+  drivesList = [];
+
   ipcRenderer.send('get-connected-devices');
+
+  return new Promise((resolve, reject) => {
+    let counter = 0,
+      maxCounter = 8;
+
+    let devicesInterval = setInterval(() => {
+
+      if (drivesList.length) {
+
+        resolve(drivesList);
+        clearInterval(devicesInterval);
+
+      } else if (counter === maxCounter) {
+
+        reject(drivesList);
+        clearInterval(devicesInterval);
+      }
+
+      counter++;
+    }, 300);
+
+  });
 };

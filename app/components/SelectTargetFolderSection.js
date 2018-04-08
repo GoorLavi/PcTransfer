@@ -1,12 +1,14 @@
 import React from 'react';
 import _ from 'lodash';
+import DeviceElement from '../containers/deviceElement';
 
 class selectTargetFolder extends React.Component {
 
   render() {
 
-    const drivesList = _.map(this.props.drivesList, (val, key) => {
-      return (<div>{val}</div>)
+    const drivesList = _.map(this.props.usbDevices, (val, key) => {
+      const {path} = val.mountpoints[0];
+      return (<DeviceElement key={path} path={path}></DeviceElement>)
     });
 
     return (<div>

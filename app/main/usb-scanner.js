@@ -14,7 +14,5 @@ ipcMain.on('get-connected-devices', function(event, arg) {
     const removableDrives = _.filter(drives, drive => drive.isRemovable);
     console.log('sending usb removable devices to main window', removableDrives);
     event.sender.send('connected-devices', removableDrives);
-
-    // console.log(drive.mountpoints[0].path);
   });
 });
