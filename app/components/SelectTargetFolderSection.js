@@ -7,7 +7,8 @@ class selectTargetFolder extends React.Component {
   render() {
 
     const drivesList = _.map(this.props.usbDevices, (val, key) => {
-      const {path} = val.mountpoints[0];
+
+      const path = val.getPath();
       return (<DeviceElement key={path} path={path}></DeviceElement>)
     });
 

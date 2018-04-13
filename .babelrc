@@ -7,6 +7,8 @@
     "stage-0",
     "react"
   ],
+    "sourceMaps": true,
+    "retainLines": true,
   "plugins": ["add-module-exports"],
   "env": {
     "production": {

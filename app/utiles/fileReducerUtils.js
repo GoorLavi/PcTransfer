@@ -6,7 +6,7 @@ import {
   combineTreePath,
   removeLastBranch,
   removeLastFolder,
-  getLastPathFolder,
+  getLastBranchFolder,
   getFolderTreeFromState,
   isFolderFullyChosen,
   setFolderTreeInState,
@@ -32,9 +32,9 @@ export const addFileToState = (state, fileData) => {
 
   // If the folder don't have selected files already
   // create the files array with the file in it
-  if (!_.get(state, fileBranchPath)) 
+  if (!_.get(state, fileBranchPath))
     newState = _.set(state, fileBranchPath, [fileData]);
-  
+
 else { // Push the file name into the files array
 
     let filesArray = _.get(state, fileBranchPath);
@@ -57,9 +57,9 @@ const unChooseFolder = (state, branchPath) => {
 
     if (i) // If its not the first loop run
       branchPath = removeLastBranch(branchPath);
-    
+
     let parentFolderPath = removeLastBranch(branchPath);
-    const folderName = getLastPathFolder(branchPath);
+    const folderName = getLastBranchFolder(branchPath);
 
     const isFolderChosen = isFolderFullyChosen(newState, parentFolderPath, folderName);
 
@@ -92,9 +92,9 @@ export const removeFile = (state, path, name) => {
 
   const newFileArray = _.reject(filesArray, file => file.name === name);
 
-  if (isFolderFullyChosen(state, path, '')) 
+  if (isFolderFullyChosen(state, path, ''))
     unChooseFolder(state, path);
-  
+
   // If the files array is empty remove the
   // array from the state tree
   if (!newFileArray.length) {
@@ -111,7 +111,7 @@ export const removeFile = (state, path, name) => {
     }
 
     return newState;
-  } else 
+  } else
     return _.set(state, branchPath, newFileArray);
   }
 ;

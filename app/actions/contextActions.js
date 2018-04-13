@@ -1,7 +1,7 @@
 import thunk from "redux-thunk";
 import Consts from "../consts";
 import Modal from "../models/modal";
-import {getDrivesList} from "../utiles/filesUtils";
+import {getDrivesList} from "../managers/files-managers";
 
 export const setCloneMode = () => {
 	return {type: "CHANGE_MODE", mode: "cloneMode"};

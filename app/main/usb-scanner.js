@@ -11,7 +11,11 @@ ipcMain.on('get-connected-devices', function(event, arg) {
       throw error;
     }
 
-    const removableDrives = _.filter(drives, drive => drive.isRemovable);
+    // console.log(drives);
+
+    // const removableDrives = _.filter(drives, drive => drive.isRemovable);
+    const removableDrives = _.filter(drives, drive => !drive.system);
+
     console.log('sending usb removable devices to main window', removableDrives);
     event.sender.send('connected-devices', removableDrives);
   });

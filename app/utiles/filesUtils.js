@@ -3,20 +3,9 @@ import Consts from '../consts';
 import _ from 'lodash';
 import fileType from 'file-type';
 import flatten from 'flat';
-import UsbDevice from '../models/usbDevice';
+// import filesManager from '../remote-process/files-manager';
 
-import {ipcRenderer} from 'electron';
 import {remote} from 'electron';
-
-// import {requireTaskPool} from 'electron-remote';
-
-// const files = requireTaskPool(require.resolve('../remote-process/files-manager'));
-
-// const answer = files.calculate().then(() => {
-//   console.log('done');
-// });
-
-// console.log('title', answer);
 
 export const getFolderContent = folderPath => {
 
@@ -98,18 +87,25 @@ export const getFile = filePath => {
   return fs.readFileSync(filePath);
 };
 
-export const getLastPathFolder = path => {
+export const getLastBranchFolder = path => {
 
   let pathArray = path.split('.');
 
   return _.last(pathArray);
 };
 
+export const getLastPathFolder = path => {
+
+  let pathArray = path.split('/');
+
+  return _.last(pathArray);
+};
+
 export const determinateElementType = (elementPath, elementProps) => {
 
-  if (elementProps.isDir) 
+  if (elementProps.isDir)
     return Consts.types.dir;
-  
+
   // Get the file in order to fileType the element
   const element = getFile(elementPath);
   const elementType = fileType(element);
@@ -118,7 +114,7 @@ export const determinateElementType = (elementPath, elementProps) => {
 
     return Consts.types.file;
   } else { // If the file type is known
-    if (elementType.mime.includes('image')) 
+    if (elementType.mime.includes('image'))
       return Consts.types.img;
     }
   };
@@ -129,9 +125,9 @@ export const combinePath = (...array) => {
 
   array.forEach(dirName => {
 
-    if (path.length && path[path.length - 1] !== '/' && dirName[0] !== '/') 
+    if (path.length && path[path.length - 1] !== '/' && dirName[0] !== '/')
       path += '/';
-    
+
     path += dirName;
 
   });
@@ -145,9 +141,9 @@ export const combineTreePath = (...array) => {
 
   array.forEach(dirName => {
 
-    if (path.length && dirName.length && path[path.length - 1] !== '.' && dirName[0] !== '.') 
+    if (path.length && dirName.length && path[path.length - 1] !== '.' && dirName[0] !== '.')
       path += '.';
-    
+
     path += dirName;
   });
 
@@ -191,7 +187,7 @@ export const convertSlashesToBackSlashes = path => {
 
 /**
  *
- * @param state
+ * @param state (filesTree)
  * @param filePath
  * @param fileName
  * @returns {boolean}
@@ -242,18 +238,18 @@ export const fullDirPathToObjectTreeDirsPath = (path, dirName) => {
 export const getFolderTreeFromState = (stateTree, path) => {
 
   // If path truly contains path
-  if (path.length) 
+  if (path.length)
     return _.get(stateTree, path);
-  
+
   // Else return the filly tree state
   return stateTree;
 };
 
 export const setFolderTreeInState = (stateTree, path, newFolderTree) => {
 
-  if (path.length) 
+  if (path.length)
     return _.set(stateTree, path, newFolderTree);
-  
+
   return _.set(stateTree, newFolderTree);
 };
 
@@ -269,51 +265,10 @@ export const stateSizeInMByte = (stateTree) => {
   let SizeInMB = 0;
 
   _.forEach(flattedStateTree, (prop, propsName) => {
-    if (_.endsWith(propsName, Consts.props.size)) 
+    if (_.endsWith(propsName, Consts.props.size))
       SizeInMB += prop;
     }
   );
 
   return SizeInMB;
-};
-
-let drivesList = [];
-
-// Retrieving drivesList from main process
-ipcRenderer.on('connected-devices', (event, devices) => {
-  console.log('found devices: ', devices);
-
-  // Converting device object to model
-  drivesList = _.map(devices, device => new UsbDevice(device));
-});
-
-// Requesting drivesList from main process
-export const getDrivesList = () => {
-
-  // Initial the array
-  drivesList = [];
-
-  ipcRenderer.send('get-connected-devices');
-
-  return new Promise((resolve, reject) => {
-    let counter = 0,
-      maxCounter = 8;
-
-    let devicesInterval = setInterval(() => {
-
-      if (drivesList.length) {
-
-        resolve(drivesList);
-        clearInterval(devicesInterval);
-
-      } else if (counter === maxCounter) {
-
-        reject(drivesList);
-        clearInterval(devicesInterval);
-      }
-
-      counter++;
-    }, 300);
-
-  });
 };

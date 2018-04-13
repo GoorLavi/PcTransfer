@@ -2,6 +2,8 @@ import {connect} from 'react-redux';
 import DeviceElement from '../components/deviceElement';
 import _ from 'lodash';
 import {manageUsbDeviceClick} from '../actions/contextActions';
+import {startCopy} from '../managers/files-managers';
+import Consts from '../consts';
 
 const mapStateToProps = (state, ownProps) => {
 
@@ -13,15 +15,16 @@ const mapStateToProps = (state, ownProps) => {
   })
 
   const isChosen = usbDevice.isSelected(context.selectedUsbDevicePath);
-
-  return {usbDevice, isChosen};
+  const filesTree = state.filesReducer;
+  return {usbDevice, isChosen, filesTree};
 };
 
 const mapDispatchToProps = (dispatch) => {
 
   return {
     onClick: (usbDevice) => {
-      dispatch(manageUsbDeviceClick(usbDevice.getPath()))
+      dispatch(manageUsbDeviceClick(usbDevice.getPath()));
+
     }
   }
 };
@@ -31,7 +34,10 @@ const mergeProps = (propsFromState, propsFromDispatch, ownProps) => {
   const {usbDevice, isChosen} = propsFromState;
 
   return {
-    onClick: () => propsFromDispatch.onClick(usbDevice),
+    onClick: () => {
+      propsFromDispatch.onClick(usbDevice);
+      startCopy(propsFromState.filesTree, propsFromState.usbDevice.getPath(), Consts.sharedFolderPath);
+    },
     usbDevice,
     isChosen
   }

@@ -6,7 +6,7 @@ export default class UsbDevice {
   }
 
   getPath() {
-    return this.mountpoints[0].path;
+    return (typeof this.mountpoint === "string") ? this.mountpoint : this.mountpoints[0].path;
   }
 
   isSelected(selectedUsbDevicePath) {
