@@ -1,0 +1,83 @@
+import thunk from "redux-thunk";
+import Consts from "../consts";
+import Modal from "../models/modal";
+import {getDrivesList} from "../managers/files-managers";
+
+export const setCloneMode = () => {
+	return {type: "CHANGE_MODE", mode: "cloneMode"};
+};
+
+export const setInsertMode = () => {
+	return {type: "CHANGE_MODE", mode: "insertMode"};
+};
+
+/**
+ * Changing the main path to the sub folder
+ * @param newFolderName
+ * @returns {{type: string, subFolderName: *}}
+ */
+export const enterSubFolder = newFolderName => {
+	return {type: "ENTER_SUB_FOLDER", subFolderName: newFolderName};
+};
+
+export const exitFolder = () => {
+	return {type: "EXIT_FOLDER"};
+};
+
+export const changeSection = section => {
+	return (dispatch, getState) => {
+		// In case switching to "select device zone"
+		if (section === Consts.section.targetFolderSection)
+			dispatch(signUsbDevices()); // Find and store connected devices
+
+		dispatch({type: "CHANGE_SECTION", section});
+	};
+};
+
+// Signing connected devices to store
+export const signUsbDevices = () => {
+	return (dispatch, getState) => {
+		getDrivesList().then(
+			usbDevices => {
+				dispatch({type: "SIGN_USB_DEVICES", devices: usbDevices});
+			},
+			() => {
+				const typeId = Consts.modalTypes.error.id;
+				const modal = new Modal(
+					typeId,
+					"Sorry",
+					"Could not find any devices error has been accoured..."
+				);
+
+				dispatch(openModal(modal));
+			}
+		);
+	};
+};
+
+export const manageUsbDeviceClick = clickedDevicePath => {
+	return (dispatch, getState) => {
+		const state = getState();
+		const {selectedUsbDevicePath} = state.contextReducer;
+
+		const type = "SELECT_USB_DEVICE";
+
+		// Case device already selected
+		// remove the device seletion
+		if (selectedUsbDevicePath === clickedDevicePath) dispatch({type});
+		else dispatch({type, clickedDevicePath});
+	};
+};
+
+export const closeModal = () => {
+	return {
+		type: "CLOSE_MODAL"
+	};
+};
+
+export const openModal = modal => {
+	return {
+		type: "OPEN_MODAL",
+		modal
+	};
+};
