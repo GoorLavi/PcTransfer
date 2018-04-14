@@ -59,6 +59,14 @@ copy-dir@^0.3.0:
   dependencies:
     mkdir-p "~0.0.4"
 
+copy-files-tree@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/copy-files-tree/-/copy-files-tree-1.0.0.tgz#0627cad28c50a74621337c8ce387e3555a735ac0"
+  dependencies:
+    fs-extra "^5.0.0"
+    lodash "^4.17.5"
+    wrench "^1.5.9"
+
 core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
@@ -137,6 +145,14 @@ fast-plist@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/fast-plist/-/fast-plist-0.1.2.tgz#a45aff345196006d406ca6cdcd05f69051ef35b8"
 
+fs-extra@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-5.0.0.tgz#414d0110cdd06705734d055652c5411260c31abd"
+  dependencies:
+    graceful-fs "^4.1.2"
+    jsonfile "^4.0.0"
+    universalify "^0.1.0"
+
 gauge@~2.7.3:
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/gauge/-/gauge-2.7.4.tgz#2c03405c7538c39d7eb37b317022e325fb018bf7"
@@ -153,6 +169,10 @@ gauge@~2.7.3:
 github-from-package@0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/github-from-package/-/github-from-package-0.0.0.tgz#97fb5d96bfde8973313f20e8288ef9a167fa64ce"
+
+graceful-fs@^4.1.2, graceful-fs@^4.1.6:
+  version "4.1.11"
+  resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
 
 has-unicode@^2.0.0:
   version "2.0.1"
@@ -187,9 +207,19 @@ js-yaml@^3.10.0:
     argparse "^1.0.7"
     esprima "^4.0.0"
 
+jsonfile@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/jsonfile/-/jsonfile-4.0.0.tgz#8771aae0799b64076b76640fca058f9c10e33ecb"
+  optionalDependencies:
+    graceful-fs "^4.1.6"
+
 lodash.get@^4.4.2:
   version "4.4.2"
   resolved "https://registry.yarnpkg.com/lodash.get/-/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
+
+lodash@^4.17.5:
+  version "4.17.5"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.5.tgz#99a92d65c0272debe8c96b6057bc8fbfa3bed511"
 
 mimic-response@^1.0.0:
   version "1.0.0"
@@ -415,6 +445,10 @@ tunnel-agent@^0.6.0:
   dependencies:
     safe-buffer "^5.0.1"
 
+universalify@^0.1.0:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.1.tgz#fa71badd4437af4c148841e3b3b165f9e9e590b7"
+
 usb-detection@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/usb-detection/-/usb-detection-2.1.0.tgz#12b6cbf0defc56d83f70eddd2e138274dad57fb6"
@@ -442,6 +476,10 @@ wide-align@^1.1.0:
 wrappy@1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
+
+wrench@^1.5.9:
+  version "1.5.9"
+  resolved "https://registry.yarnpkg.com/wrench/-/wrench-1.5.9.tgz#411691c63a9b2531b1700267279bdeca23b2142a"
 
 xmlhttprequest@^1.8.0:
   version "1.8.0"

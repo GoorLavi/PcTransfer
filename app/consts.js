@@ -1,5 +1,5 @@
 export default {
-	sharedFolderPath: "/Users/goorlavi1/Documents/pc-transfer/",
+	sharedFolderPath: "/Users/goorlavi1/Desktop/test1",
 	fsPath: "file:\\C:\\",
 	types: {
 		dir: "directory",
