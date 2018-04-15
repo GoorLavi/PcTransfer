@@ -2,7 +2,7 @@ import {connect} from 'react-redux';
 import DeviceElement from '../components/deviceElement';
 import _ from 'lodash';
 import {manageUsbDeviceClick} from '../actions/contextActions';
-import {startCopy} from '../managers/files-managers';
+import {startCopy} from '../managers/files-manager';
 import Consts from '../consts';
 
 const mapStateToProps = (state, ownProps) => {
@@ -24,7 +24,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onClick: (usbDevice) => {
       dispatch(manageUsbDeviceClick(usbDevice.getPath()));
-
     }
   }
 };

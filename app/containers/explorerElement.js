@@ -12,6 +12,7 @@ import {
 } from '../utiles/filesUtils';
 import { addFile, removeFile, addFolderFiles, removeFolderFiles } from '../actions/filesActions';
 import { enterSubFolder } from '../actions/contextActions';
+import { getFolderContent } from '../managers/files-manager';
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -46,11 +47,15 @@ const mapDispatchToProps = (dispatch) => {
                     dispatch(removeFolderFiles(folderPath, name));
 
                 else {
-
+                    
                     const fullPath = combinePath(folderPath, name);
-                    const fullFolderContent = getFullFolderContent(fullPath);
+                    getFolderContent(fullPath).then((fullFolderContent) => {
 
-                    dispatch(addFolderFiles(fullPath, fullFolderContent));
+                        dispatch(addFolderFiles(fullPath, fullFolderContent));
+                    }, (error) => {
+                        console.log(error);
+                    });
+
                 }
             }
             else { // Add or remove the file

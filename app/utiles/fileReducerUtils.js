@@ -127,7 +127,7 @@ export const removeFile = (state, path, name) => {
 export const addFolderContentToState = (state, folderPath, fullFolderTree) => {
 
   fullFolderTree = setFoldersTreeToFullyChosen(state, folderPath, fullFolderTree);
-  return _.set(state, folderPath, fullFolderTree);
+  return _.set(state, convertPathSlashesToDots(folderPath), fullFolderTree);
 };
 
 /**

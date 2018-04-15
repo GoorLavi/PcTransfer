@@ -10,7 +10,7 @@ export default class explorerContainer extends Component {
 
         const { folderContent } = this.props;
 
-        let explorerElements = folderContent.map((element, index) =>
+        let explorerElements = _.map(folderContent, (element, index) =>
             <ExplorerElement key={index} element={element} />
         );
 

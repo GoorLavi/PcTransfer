@@ -3,8 +3,6 @@ import Consts from '../consts';
 import _ from 'lodash';
 import fileType from 'file-type';
 import flatten from 'flat';
-// import filesManager from '../remote-process/files-manager';
-
 import {remote} from 'electron';
 
 export const getFolderContent = folderPath => {
@@ -15,7 +13,7 @@ export const getFolderContent = folderPath => {
 
   let elementsNames = fs.readdirSync(folderFullPath);
 
-  elementsNames.forEach(elementName => {
+  _.forEach(elementsNames, elementName => {
 
     let element = {
       name: elementName
@@ -47,7 +45,8 @@ export const getElementProps = (path) => {
   };
 };
 
-export const getFullFolderContent = folderPath => {
+
+export const getFolderFullContent = (folderPath) => {
 
   const folderFullPath = combinePath(Consts.sharedFolderPath, folderPath);
 
@@ -57,8 +56,7 @@ export const getFullFolderContent = folderPath => {
 
   let elementsNames = fs.readdirSync(folderFullPath);
 
-  elementsNames.forEach(elementName => {
-
+  _.forEach(elementsNames, (elementName) => {
     let element = {
       name: elementName
     };
@@ -72,33 +70,15 @@ export const getFullFolderContent = folderPath => {
     if (elementProps.isDir) {
 
       const dirPath = combinePath(folderPath, elementName);
-      foldersElements[element.name] = getFullFolderContent(dirPath);
+      foldersElements[element.name] = getFolderFullContent(dirPath);
     } else {
       const mergedElement = Object.assign({}, element, elementProps);
       foldersElements.files.push(mergedElement);
     }
   });
-
+  
   return foldersElements;
-};
-
-export const getFile = filePath => {
-
-  return fs.readFileSync(filePath);
-};
-
-export const getLastBranchFolder = path => {
-
-  let pathArray = path.split('.');
-
-  return _.last(pathArray);
-};
-
-export const getLastPathFolder = path => {
-
-  let pathArray = path.split('/');
-
-  return _.last(pathArray);
+  
 };
 
 export const determinateElementType = (elementPath, elementProps) => {
@@ -118,6 +98,28 @@ export const determinateElementType = (elementPath, elementProps) => {
       return Consts.types.img;
     }
   };
+
+  
+  export const getFile = filePath => {
+
+    return fs.readFileSync(filePath);
+  };
+
+export const getLastBranchFolder = path => {
+
+  let pathArray = path.split('.');
+
+  return _.last(pathArray);
+};
+
+export const getLastPathFolder = path => {
+
+  let pathArray = path.split('/');
+
+  return _.last(pathArray);
+};
+
+
 
 export const combinePath = (...array) => {
 

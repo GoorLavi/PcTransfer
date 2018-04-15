@@ -30,7 +30,7 @@ export default class explorerElement extends Component {
           ? doubleClick[0] = false
           : doubleClick[1] = false;
       }
-    }, 400);
+    }, 200);
   };
 
   getElementAppearanceByFileType() {
@@ -69,14 +69,9 @@ export default class explorerElement extends Component {
 
     const nameJsx = <p className="element-name">{name}</p>;
 
-    // Show selected icon next to the element name
-    const footer = itemSelected
-      ? <div>{nameJsx}<Glyphicon className="element-checked-icon" glyph="ok"/></div>
-      : nameJsx;
-
     return (<Col className="explorer-col" xs={3} onClick={() => this.onClick()} onDoubleClick={() => this.onDoubleClick()}>
-      <Thumbnail className="image-thumbnail-element" src={appearance} alt="242x200">
-        {footer}
+      <Thumbnail className={`image-thumbnail-element ${itemSelected ? 'selected-element-card': ''}`} src={appearance} alt="242x200">
+        {nameJsx}
       </Thumbnail>
     </Col>);
   }

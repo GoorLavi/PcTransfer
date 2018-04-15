@@ -24,6 +24,10 @@
     text-align: center;
 }
 
+.selected-element-card {
+    background-color: #809cd0;
+}
+
 
 .file-name {
     padding: 10px;
