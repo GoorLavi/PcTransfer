@@ -1,7 +1,7 @@
 import {ipcMain} from 'electron';
 import copyFilesTree from 'copy-files-tree';
 import _ from 'lodash';
-import { getFolderFullContent } from '../utiles/filesUtils';
+import { getFolderFullContent, getFolderContent } from '../utiles/filesUtils';
 import fs from 'fs';
 
 
@@ -17,7 +17,7 @@ ipcMain.on('copy-files', function(event, {filesTree, sourcePath, selectedDevice}
 });
 
 
-ipcMain.on('get-folder-content', (event, folderPath) => {
+ipcMain.on('deep-get-folder-content', (event, folderPath) => {
 
   let error, folderElements;
   try{
@@ -27,7 +27,21 @@ ipcMain.on('get-folder-content', (event, folderPath) => {
     error = _error;
   }
 
-  event.sender.send('folder-content-res', error, folderElements);
+  event.sender.send('deep-folder-content-res', error, folderElements);
   
 });
  
+
+ipcMain.on('get-folder-content', (event, folderPath) => {
+
+  let error, folderElements;
+  try{
+   folderElements = getFolderContent(folderPath);
+  }
+  catch(_error){
+    error = _error;
+  }
+
+  event.sender.send('folder-content-res', error, folderElements);
+  
+});

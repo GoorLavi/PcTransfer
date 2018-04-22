@@ -21,3 +21,7 @@ export default class Modal {
 		}
 	}
 }
+
+export const generateDefaultErrorModal = () => {
+	return new Modal(modalTypes.error.id, 'Sorry', 'An error has been occurred')
+}

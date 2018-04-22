@@ -45,7 +45,6 @@ export const getElementProps = (path) => {
   };
 };
 
-
 export const getFolderFullContent = (folderPath) => {
 
   const folderFullPath = combinePath(Consts.sharedFolderPath, folderPath);
@@ -105,7 +104,8 @@ export const determinateElementType = (elementPath, elementProps) => {
     return fs.readFileSync(filePath);
   };
 
-export const getLastBranchFolder = path => {
+
+  export const getLastBranchFolder = path => {
 
   let pathArray = path.split('.');
 
@@ -118,8 +118,6 @@ export const getLastPathFolder = path => {
 
   return _.last(pathArray);
 };
-
-
 
 export const combinePath = (...array) => {
 
@@ -161,7 +159,7 @@ export const removeLastBranch = (treePath) => {
   return treePathArray.join('.');
 };
 
-export const removeLastFolder = (path) => {
+export const removeLastFolder = (path = '') => {
 
   let pathArray = path.split('/');
 
@@ -247,12 +245,12 @@ export const getFolderTreeFromState = (stateTree, path) => {
   return stateTree;
 };
 
-export const setFolderTreeInState = (stateTree, path, newFolderTree) => {
+export const setFolderTreeInState = (stateTree, path, newFolderTree = {}) => {
 
   if (path.length)
     return _.set(stateTree, path, newFolderTree);
 
-  return _.set(stateTree, newFolderTree);
+  return newFolderTree;
 };
 
 /**

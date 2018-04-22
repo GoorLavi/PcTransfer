@@ -2,37 +2,37 @@ import Consts from "../consts";
 import {combinePath, removeLastFolder} from "../utiles/filesUtils";
 
 let initializedState = {
+	initialized: false,
 	mode: "",
-	folder: "",
+	folder: {path: "", content:{}},
 	section: Consts.section.fileSection,
 	usbDevices: [],
 	selectedUsbDevicePath: "",
-	modal: null
+	modal: null,
+	loadingFolderContent: true
 };
 
 export default (state = initializedState, action) => {
 	switch (action.type) {
+		case "INITIALIZED": {
+			
+			return _.set(state, 'initialized', true);
+		}
 		case "CHANGE_MODE": {
 			return Object.assign({}, state, {mode: action.mode});
 		}
 		case "CHANGE_SECTION": {
 			return Object.assign({}, state, {section: action.section});
 		}
-		case "ENTER_SUB_FOLDER": {
-			const newPath = combinePath(state.folder, action.subFolderName);
-			return Object.assign({}, state, {folder: newPath});
-		}
-		case "EXIT_FOLDER": {
-			let stateObj = {};
+	
+		case "SET_FOLDER_PATH": {
 
-			if (state.folder) {
-				stateObj = {
-					folder: removeLastFolder(state.folder)
-				};
-			}
+			return _.set(state, 'folder.path', action.folderPath);
+		} 
+		case "SET_FOLDER_CONTENT": {
 
-			return Object.assign({}, state, stateObj);
-		}
+			return _.set(state, 'folder.content', action.content);
+		} 
 		case "SIGN_USB_DEVICES": {
 			return Object.assign({}, state, {usbDevices: action.devices});
 		}
@@ -49,6 +49,16 @@ export default (state = initializedState, action) => {
 		case "OPEN_MODAL": {
 			return Object.assign({}, state, {
 				modal: action.modal
+			});
+		}
+		case "LOADING_FOLDER_CONTENT": {
+			return Object.assign({}, state, {
+				loadingFolderContent: true
+			});
+		}
+		case "LOADING_FOLDER_CONTENT_FINISHED": {
+			return Object.assign({}, state, {
+				loadingFolderContent: false
 			});
 		}
 		default:

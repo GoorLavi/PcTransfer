@@ -12,7 +12,7 @@ import {
 } from '../utiles/filesUtils';
 import { addFile, removeFile, addFolderFiles, removeFolderFiles } from '../actions/filesActions';
 import { enterSubFolder } from '../actions/contextActions';
-import { getFolderContent } from '../managers/files-manager';
+import { deepGetFolderContent } from '../managers/files-manager';
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -49,7 +49,7 @@ const mapDispatchToProps = (dispatch) => {
                 else {
                     
                     const fullPath = combinePath(folderPath, name);
-                    getFolderContent(fullPath).then((fullFolderContent) => {
+                    deepGetFolderContent(fullPath).then((fullFolderContent) => {
 
                         dispatch(addFolderFiles(fullPath, fullFolderContent));
                     }, (error) => {

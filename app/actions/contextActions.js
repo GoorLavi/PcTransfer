@@ -1,7 +1,16 @@
 import thunk from "redux-thunk";
 import Consts from "../consts";
-import Modal from "../models/modal";
-import {getDrivesList} from "../managers/files-manager";
+import Modal, { generateDefaultErrorModal } from "../models/modal";
+import {getDrivesList, getFolderContent} from "../managers/files-manager";
+import { removeLastFolder, combinePath } from "../utiles/filesUtils";
+
+export const initializeState = () => {
+
+	return (dispatch, getState) => {
+		dispatch(setFolderPath(''));
+		dispatch({type: "INITIALIZED"})		
+	}
+};
 
 export const setCloneMode = () => {
 	return {type: "CHANGE_MODE", mode: "cloneMode"};
@@ -17,11 +26,73 @@ export const setInsertMode = () => {
  * @returns {{type: string, subFolderName: *}}
  */
 export const enterSubFolder = newFolderName => {
-	return {type: "ENTER_SUB_FOLDER", subFolderName: newFolderName};
+	return (dispatch, getState) => {
+
+		const state = getState();
+		
+		const newPath = combinePath(state.contextReducer.folder.path, newFolderName);
+		dispatch(setFolderPath(newPath));
+	}
 };
 
-export const exitFolder = () => {
-	return {type: "EXIT_FOLDER"};
+export const goBack = () => {
+	return (dispatch, getState) => {
+
+		const folderPath = getState().contextReducer.folder.path;
+
+		if(folderPath){
+			const newPath = removeLastFolder(folderPath)
+			dispatch(setFolderPath(newPath));
+		}
+	}
+};
+
+export const changeToParentFolderName = (folderName = Consts.mainFolderDisplayName) => {
+	return (dispatch, getState) => {
+
+		const fullPath = getState().contextReducer.folder.path;
+		const index = fullPath.indexOf(folderName);
+
+		let newPath = '';
+
+		// Main folder (not exists in folderPath)
+		if(index !== -1)
+			newPath = fullPath.substring(0, index+folderName.length+1);
+
+		dispatch(setFolderPath(newPath));
+	};
+};
+
+export const setFolderPath = (newFolderPath) => {
+	return (dispatch, getState) => {
+
+		dispatch({type: "SET_FOLDER_PATH", folderPath: newFolderPath});
+		dispatch(setFolderContent(newFolderPath));
+
+	};
+};
+
+/**
+ * Takes folder path save the content data to state 
+ * @param {string} folderPath 
+ */
+export const setFolderContent = folderPath => {
+	return (dispatch, getState) => {
+
+		dispatch(loadingFolderContent());
+
+		getFolderContent(folderPath).then((folderContent) =>{
+
+			dispatch({type: "SET_FOLDER_CONTENT", content: folderContent});
+			dispatch(loadingFolderContentFinished());
+
+		}, () => {
+
+			dispatch(loadingFolderContentFinished());
+			dispatch(openModal(generateDefaultErrorModal()));
+		})
+	
+	};
 };
 
 export const changeSection = section => {
@@ -81,3 +152,13 @@ export const openModal = modal => {
 		modal
 	};
 };
+
+export const loadingFolderContent = () => {
+
+	return{type: 'LOADING_FOLDER_CONTENT'};
+}
+
+export const loadingFolderContentFinished = () => {
+	
+	return{type: 'LOADING_FOLDER_CONTENT_FINISHED'};
+}

@@ -1,17 +1,35 @@
+html {
+height: 100%;
+}
 
+body {
+  background-size: 100%;
+  user-select: none;
+  cursor: default;
+  height: 100%;
+  font-family: 'Arimo', sans-serif;
+}
 
 #root {
   height:100%;
   width: 100%;
-  direction: rtl;
-  padding: 80px 20px 45px
 }
 
-
-body{
-  background-size: 100%;
-}
 
 .panel-body{
   padding: 0;
 }
+
+.wrapper {
+  height: 100%;
+}
+
+button {
+  outline: transparent !important;
+}
+
+.css-1eitjko {
+  top: 50%;
+  left: 50%;
+}
+

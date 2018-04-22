@@ -68,9 +68,9 @@ export default class explorerElement extends Component {
     const appearance = this.getElementAppearanceByFileType(type);
 
     const nameJsx = <p className="element-name">{name}</p>;
-
-    return (<Col className="explorer-col" xs={3} onClick={() => this.onClick()} onDoubleClick={() => this.onDoubleClick()}>
-      <Thumbnail className={`image-thumbnail-element ${itemSelected ? 'selected-element-card': ''}`} src={appearance} alt="242x200">
+    
+    return (<Col className="explorer-col">
+      <Thumbnail className={`image-thumbnail-element ${itemSelected ? 'selected-element-card': ''}`}  onClick={() => this.onClick()} onDoubleClick={() => this.onDoubleClick()} src={appearance} alt="242x200">
         {nameJsx}
       </Thumbnail>
     </Col>);

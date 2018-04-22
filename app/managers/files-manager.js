@@ -11,8 +11,8 @@ export const startCopy = (filesTree, selectedDevice, sourcePath) => {
 
 ipcRenderer.on('copy-files-finished', (event, error) => {
 
-if(error)
-  console.error("could not copy files", error);
+  if(error)
+    console.error("could not copy files", error);
 
 });
 
@@ -41,7 +41,26 @@ export const getDrivesList = () => {
   });
 };
 
-export const getFolderContent = folderPath => {
+export const deepGetFolderContent = folderPath => {
+
+  ipcRenderer.send('deep-get-folder-content', folderPath);
+
+  return new Promise((resolve, reject) => {
+    
+    // Retrieving folder content
+    ipcRenderer.on('deep-folder-content-res', (event, error, folderContent) => {
+
+      if(error)
+        reject(error);
+      else
+        resolve(folderContent)
+      
+    });
+  });
+};
+
+
+export const getFolderContent = (folderPath) => {
 
   ipcRenderer.send('get-folder-content', folderPath);
 
@@ -57,6 +76,5 @@ export const getFolderContent = folderPath => {
       
     });
   });
-};
-
+}
 

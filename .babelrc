@@ -9,7 +9,7 @@
   ],
     "sourceMaps": true,
     "retainLines": true,
-  "plugins": ["add-module-exports"],
+  "plugins": ["add-module-exports", "emotion"],
   "env": {
     "production": {
       "presets": ["react-optimize"],
