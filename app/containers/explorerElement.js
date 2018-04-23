@@ -9,7 +9,7 @@ import {
     getFullFolderContent,
     combineTreePath,
     convertPathSlashesToDots
-} from '../utiles/filesUtils';
+} from '../utils/filesUtils';
 import { addFile, removeFile, addFolderFiles, removeFolderFiles } from '../actions/filesActions';
 import { enterSubFolder } from '../actions/contextActions';
 import { deepGetFolderContent } from '../managers/files-manager';

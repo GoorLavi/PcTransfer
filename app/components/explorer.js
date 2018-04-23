@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ExplorerElement from '../containers/explorerElement';
-import '../assets/css/explorerContainer.css';
 import { Grid, Row, Breadcrumb, Glyphicon, Button } from 'react-bootstrap';
 import _ from 'lodash';
 import Sidebar from '../containers/sidebar';

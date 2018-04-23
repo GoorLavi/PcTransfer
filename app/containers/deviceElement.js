@@ -33,10 +33,7 @@ const mergeProps = (propsFromState, propsFromDispatch, ownProps) => {
   const {usbDevice, isChosen} = propsFromState;
 
   return {
-    onClick: () => {
-      propsFromDispatch.onClick(usbDevice);
-      startCopy(propsFromState.filesTree, propsFromState.usbDevice.getPath(), Consts.sharedFolderPath);
-    },
+    onClick: () => propsFromDispatch.onClick(usbDevice),
     usbDevice,
     isChosen
   }

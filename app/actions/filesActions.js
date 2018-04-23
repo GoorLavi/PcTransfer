@@ -1,4 +1,10 @@
-import { parametersValidations } from '../utiles/validationsUtils';
+import { parametersValidations } from '../utils/validationsUtils';
+
+
+export const resetStore = () => {
+
+	return { type: 'RESET_STORE' };
+}
 
 /**
  *

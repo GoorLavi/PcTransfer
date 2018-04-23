@@ -3,7 +3,7 @@ import Consts from '../consts';
 import {Col, Thumbnail, Glyphicon} from 'react-bootstrap';
 import DirectoryImage from '../assets/images/folder.jpg';
 import FileImage from '../assets/images/file0.png';
-import {convertSlashesToBackSlashes, combinePath} from '../utiles/filesUtils';
+import {convertSlashesToBackSlashes, combinePath} from '../utils/filesUtils';
 
 // Signal to each click
 let doubleClick = [false, false];

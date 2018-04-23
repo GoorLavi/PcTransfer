@@ -1,4 +1,4 @@
-import { addFileToState, addFolderContentToState, removeFile, removeFolderContentFromState} from '../utiles/fileReducerUtils';
+import { addFileToState, addFolderContentToState, removeFile, removeFolderContentFromState} from '../utils/fileReducerUtils';
 
 
 const initializedState = {};
@@ -7,6 +7,9 @@ const initializedState = {};
 export default (state = initializedState, action) => {
 
     switch (action.type) {
+        case "RESET_STORE": {
+			return {};
+		}
         case 'ADD_FILE': {
 
             const newState = addFileToState(state, action.fileData);

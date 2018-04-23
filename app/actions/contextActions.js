@@ -1,23 +1,25 @@
 import thunk from "redux-thunk";
 import Consts from "../consts";
 import Modal, { generateDefaultErrorModal } from "../models/modal";
-import {getDrivesList, getFolderContent} from "../managers/files-manager";
-import { removeLastFolder, combinePath } from "../utiles/filesUtils";
+import { getDrivesList, getFolderContent } from "../managers/files-manager";
+import { removeLastFolder, combinePath } from "../utils/filesUtils";
+import { resetStore } from "./filesActions";
 
 export const initializeState = () => {
 
 	return (dispatch, getState) => {
 		dispatch(setFolderPath(''));
-		dispatch({type: "INITIALIZED"})		
+		dispatch({ type: "INITIALIZED" })
 	}
 };
 
+
 export const setCloneMode = () => {
-	return {type: "CHANGE_MODE", mode: "cloneMode"};
+	return { type: "CHANGE_MODE", mode: "cloneMode" };
 };
 
 export const setInsertMode = () => {
-	return {type: "CHANGE_MODE", mode: "insertMode"};
+	return { type: "CHANGE_MODE", mode: "insertMode" };
 };
 
 /**
@@ -29,7 +31,7 @@ export const enterSubFolder = newFolderName => {
 	return (dispatch, getState) => {
 
 		const state = getState();
-		
+
 		const newPath = combinePath(state.contextReducer.folder.path, newFolderName);
 		dispatch(setFolderPath(newPath));
 	}
@@ -40,7 +42,7 @@ export const goBack = () => {
 
 		const folderPath = getState().contextReducer.folder.path;
 
-		if(folderPath){
+		if (folderPath) {
 			const newPath = removeLastFolder(folderPath)
 			dispatch(setFolderPath(newPath));
 		}
@@ -56,8 +58,8 @@ export const changeToParentFolderName = (folderName = Consts.mainFolderDisplayNa
 		let newPath = '';
 
 		// Main folder (not exists in folderPath)
-		if(index !== -1)
-			newPath = fullPath.substring(0, index+folderName.length+1);
+		if (index !== -1)
+			newPath = fullPath.substring(0, index + folderName.length + 1);
 
 		dispatch(setFolderPath(newPath));
 	};
@@ -66,7 +68,7 @@ export const changeToParentFolderName = (folderName = Consts.mainFolderDisplayNa
 export const setFolderPath = (newFolderPath) => {
 	return (dispatch, getState) => {
 
-		dispatch({type: "SET_FOLDER_PATH", folderPath: newFolderPath});
+		dispatch({ type: "SET_FOLDER_PATH", folderPath: newFolderPath });
 		dispatch(setFolderContent(newFolderPath));
 
 	};
@@ -81,9 +83,9 @@ export const setFolderContent = folderPath => {
 
 		dispatch(loadingFolderContent());
 
-		getFolderContent(folderPath).then((folderContent) =>{
+		getFolderContent(folderPath).then((folderContent) => {
 
-			dispatch({type: "SET_FOLDER_CONTENT", content: folderContent});
+			dispatch({ type: "SET_FOLDER_CONTENT", content: folderContent });
 			dispatch(loadingFolderContentFinished());
 
 		}, () => {
@@ -91,7 +93,7 @@ export const setFolderContent = folderPath => {
 			dispatch(loadingFolderContentFinished());
 			dispatch(openModal(generateDefaultErrorModal()));
 		})
-	
+
 	};
 };
 
@@ -101,16 +103,22 @@ export const changeSection = section => {
 		if (section === Consts.section.targetFolderSection)
 			dispatch(signUsbDevices()); // Find and store connected devices
 
-		dispatch({type: "CHANGE_SECTION", section});
+		dispatch({ type: "CHANGE_SECTION", section });
 	};
 };
 
 // Signing connected devices to store
 export const signUsbDevices = () => {
 	return (dispatch, getState) => {
+
+		dispatch({ type: "LOADING_USB_DEVICES" });
+
 		getDrivesList().then(
 			usbDevices => {
-				dispatch({type: "SIGN_USB_DEVICES", devices: usbDevices});
+				dispatch({ type: "SIGN_USB_DEVICES", devices: usbDevices });
+
+				dispatch({ type: "LOADING_USB_DEVICES_FINISHED" });
+
 			},
 			() => {
 				const typeId = Consts.modalTypes.error.id;
@@ -119,7 +127,7 @@ export const signUsbDevices = () => {
 					"Sorry",
 					"Could not find any devices error has been accoured..."
 				);
-
+				dispatch({ type: "LOADING_USB_DEVICES_FINISHED" });
 				dispatch(openModal(modal));
 			}
 		);
@@ -129,14 +137,14 @@ export const signUsbDevices = () => {
 export const manageUsbDeviceClick = clickedDevicePath => {
 	return (dispatch, getState) => {
 		const state = getState();
-		const {selectedUsbDevicePath} = state.contextReducer;
+		const { selectedUsbDevicePath } = state.contextReducer;
 
 		const type = "SELECT_USB_DEVICE";
 
 		// Case device already selected
 		// remove the device seletion
-		if (selectedUsbDevicePath === clickedDevicePath) dispatch({type});
-		else dispatch({type, clickedDevicePath});
+		if (selectedUsbDevicePath === clickedDevicePath) dispatch({ type });
+		else dispatch({ type, clickedDevicePath });
 	};
 };
 
@@ -145,6 +153,26 @@ export const closeModal = () => {
 		type: "CLOSE_MODAL"
 	};
 };
+
+
+export const copyFiles = () => {
+	return {
+		type: "COPY_FILES"
+	};
+};
+
+export const copyFilesFinished = (copySucceed) => {
+	return (dispatch, getState) => {
+
+		dispatch({ type: "COPY_FILES_FINISHED" });
+
+		if (copySucceed){
+			dispatch(resetStore())
+			dispatch(initializeState())
+		}
+	};
+};
+
 
 export const openModal = modal => {
 	return {
@@ -155,10 +183,10 @@ export const openModal = modal => {
 
 export const loadingFolderContent = () => {
 
-	return{type: 'LOADING_FOLDER_CONTENT'};
+	return { type: 'LOADING_FOLDER_CONTENT' };
 }
 
 export const loadingFolderContentFinished = () => {
-	
-	return{type: 'LOADING_FOLDER_CONTENT_FINISHED'};
+
+	return { type: 'LOADING_FOLDER_CONTENT_FINISHED' };
 }

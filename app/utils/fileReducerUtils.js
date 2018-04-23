@@ -11,7 +11,7 @@ import {
   isFolderFullyChosen,
   setFolderTreeInState,
   stateSizeInMByte
-} from '../utiles/filesUtils';
+} from '../utils/filesUtils';
 import Consts from '../consts';
 
 /**

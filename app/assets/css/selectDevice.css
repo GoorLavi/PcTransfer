@@ -1,0 +1,50 @@
+#devices_list {
+  
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+    height: 40%;
+}
+
+#devices_list css-1eitjko {
+    position: absolute;
+}
+
+
+#devices_container {
+    background-color: #333;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+#devices_action_description {
+    display: flex;
+    flex-direction: column;
+    height: 37%;
+    color: white;
+    text-align: center;
+    justify-content: center;
+}
+
+#start_copy_btn {
+
+    min-width: 25vw;
+    max-width: 27vw;
+    align-self: center;
+    border-radius: 30px;
+    font-size: 23px;
+    box-shadow: inset -1px -7px 12px #888787;
+    border-width: 2px;
+    border-bottom-style: ridge;
+}
+
+#back_to_file_selection_btn {
+
+    background: transparent;
+    border: 0;
+    color: silver;
+    width: 136px;
+    font-size: 19px;
+}

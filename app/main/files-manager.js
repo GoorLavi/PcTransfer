@@ -1,19 +1,17 @@
 import {ipcMain} from 'electron';
 import copyFilesTree from 'copy-files-tree';
 import _ from 'lodash';
-import { getFolderFullContent, getFolderContent } from '../utiles/filesUtils';
+import { getFolderFullContent, getFolderContent } from '../utils/filesUtils';
 import fs from 'fs';
+import Consts from '../consts';
 
+ipcMain.on('copy-files', (event, {filesTree, sourcePath, selectedDevice}) => {
 
-ipcMain.on('copy-files', function(event, {filesTree, sourcePath, selectedDevice}) {
-
-
-  const error = copyFilesTree(filesTree, sourcePath, selectedDevice+'\\testFolder')
+  const error = copyFilesTree(filesTree, sourcePath, selectedDevice+'\\'+ Consts.destinationFolder)
 
   console.log(error);
   
   event.sender.send('copy-files-finished', error);
-
 });
 
 

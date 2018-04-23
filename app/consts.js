@@ -2,6 +2,7 @@ export default {
 	sharedFolderPath: "/Users/goorlavi1/Desktop/test1",
 	fsPath: "file:\\C:\\",
 	mainFolderDisplayName: 'Home', // Start folder at the header folder path  
+	destinationFolder: 'transferFolder',
 	types: {
 		dir: "directory",
 		file: "file",

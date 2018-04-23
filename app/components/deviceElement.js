@@ -3,6 +3,8 @@ import Consts from '../consts';
 import {Col, Thumbnail} from 'react-bootstrap';
 import UsbDevice from '../assets/images/Usb.ico';
 
+
+
 export default class deviceElement extends Component {
 
   constructor(props) {
@@ -18,10 +20,10 @@ export default class deviceElement extends Component {
       ? ' selected-usb-device-thumbnail'
       : '');
 
-    return (<Col className="explorer-col" xs={3} onClick={() => onClick()}>
-      <Thumbnail className={className} src={UsbDevice} alt="242x200">
-        {usbDevice.getPath()}
-      </Thumbnail>
-    </Col>);
+    return (
+        <Thumbnail  onClick={() => onClick()} className={className} src={UsbDevice} alt="242x200">
+          {usbDevice.getPath()}
+        </Thumbnail>
+    );
   }
 }
