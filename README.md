@@ -1,7 +1,7 @@
 # PcTransfer - File transfer interface includes permissions that prohibit access to Windows Explorer
 _Developed with Electron, React, Redux, Webpack_
 
-I created this software allowing people to share information from their computer to others, without damaging the information or the computer itself.
+I created this software allowing people to share a folder from their computer any interacter, with a secure UI, so the user will not get access to any other folders and files.
 
 The software displays contents of a shared folder and the user will be able to mark files and folders at will.
 
@@ -12,7 +12,7 @@ and set `sharedFolderPath` to the path you want
 
 
 
-### the program is not ready to use yet but its on the final steps.
+### the program is ready to use despit few async problems.
 
 
 ### To get started:
